@@ -17,7 +17,6 @@ class BreweryIndexTest extends TestCase
     public function testUnauthenticatedUserCannotAccessBreweries(): void
     {
         $response = $this->getJson(route('breweries-list', ['page' => 1, 'perPage' => 10]));
-        $response = $this->getJson('/api/breweries-list?page=1&per_page=10');
         $response->assertStatus(401);
     }
 
