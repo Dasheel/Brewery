@@ -1,0 +1,36 @@
+FROM php:8.2-fpm
+
+# Installazione delle dipendenze
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    default-mysql-client \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copia Composer dalla versione stabile
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Imposta la directory di lavoro
+WORKDIR /var/www/html
+
+# Copia i file del progetto
+COPY . /var/www/html
+
+# Imposta i permessi corretti per la directory
+RUN chown -R www-data:www-data /var/www/html
+
+# Installa le dipendenze PHP con ottimizzazione
+RUN composer install --no-dev --optimize-autoloader
+
+# Esponi la porta
+EXPOSE 9000
