@@ -28,8 +28,8 @@ cp .env.example .env
 ### 1. Avviare il container
 Una volta selezionato il file corretto, puoi avviare il container eseguendo (assicurarsi di essere nella cartella del progetto):
 ```bash
-docker-compose down -v Per cancellare eventuali immagini sporche
-docker-compose build --no-cache Per buildare il composer senza cache
+docker-compose down -v Per fermare ed eliminare i container Docker definiti nel file
+docker-compose build --no-cache Per buildare il compose senza cache
 docker-compose up --build -d Per avviare il container
 ```
 ### 2. Verificare lo stato dei servizi
