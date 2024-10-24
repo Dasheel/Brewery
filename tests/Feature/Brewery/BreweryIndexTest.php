@@ -20,6 +20,22 @@ class BreweryIndexTest extends TestCase
         $response->assertStatus(401);
     }
 
+    /**
+     * @dataProvider invalidBreweryProvider
+     *
+     * @param string $input
+     * @param mixed  $value
+     */
+    public function testInvalidBreweryRequest(string $input, mixed $value): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $response = $this->actingAs($user, 'sanctum')->getJson(route('breweries-list', [$input => $value]));
+
+        $response->assertUnprocessable();
+        $response->assertJsonValidationErrorFor($input);
+    }
+
     public function testAuthenticatedUserCanAccessBreweries(): void
     {
         /** @var User $user */
@@ -49,5 +65,18 @@ class BreweryIndexTest extends TestCase
                 'has_more_pages',
             ],
         ]);
+    }
+
+    public static function invalidBreweryProvider()
+    {
+        return [
+            ['page', false],
+            ['page', 'foo'],
+            ['page', 0],
+            ['page', ['foo']],
+            ['per_page', 'foo'],
+            ['per_page', 51],
+            ['per_page', ['foo']],
+        ];
     }
 }

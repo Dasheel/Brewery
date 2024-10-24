@@ -1,19 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
     <title>Birrerie</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Lista delle Birrerie</h1>
-<ul id="brewery-list"></ul>
+<body class="bg-light">
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Lista delle Birrerie</h1>
 
-<!-- Paginazione -->
-<div id="pagination">
-    <button id="prev-page">Precedente</button>
-    <span id="current-page">Pagina 1</span>
-    <button id="next-page">Successiva</button>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Città</th>
+            <th>Stato/Provincia</th>
+            <th>Telefono</th>
+            <th>Indirizzo</th>
+            <th>Sito Internet</th>
+        </tr>
+        </thead>
+        <tbody id="brewery-list">
+        </tbody>
+    </table>
+
+    <div id="pagination" class="d-flex justify-content-between">
+        <button id="prev-page" class="btn btn-outline-primary">Precedente</button>
+        <span id="current-page" class="align-self-center">Pagina 1</span>
+        <button id="next-page" class="btn btn-outline-primary">Successiva</button>
+    </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const accessToken = localStorage.getItem('access_token');
@@ -48,15 +65,16 @@
                     breweryList.innerHTML = '';
 
                     data.data.forEach(brewery => {
-                        const li = document.createElement('li');
-                        const name = brewery.name || 'Nome non disponibile';
-                        const street = brewery.street || 'Via non disponibile';
-                        const city = brewery.city || 'Città non disponibile';
-                        const stateProvince = brewery.state_province || 'Provincia non disponibile';
-                        const phone = brewery.phone || 'Telefono non disponibile';
-
-                        li.textContent = `${name} - ${street}, ${city}, ${stateProvince} - ${phone}`;
-                        breweryList.appendChild(li);
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                        <td>${brewery.name || ''}</td>
+                        <td>${brewery.city || ''}</td>
+                        <td>${brewery.state_province || ''}</td>
+                        <td>${brewery.phone || 'N/A'}</td>
+                        <td>${brewery.street || ''}</td>
+                        <td>${brewery.website_url || ''}</td>
+                    `;
+                        breweryList.appendChild(row);
                     });
 
                     document.getElementById('current-page').textContent = 'Pagina ' + currentPage;
